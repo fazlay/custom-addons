@@ -8,14 +8,14 @@ _logger = logging.getLogger(__name__)
 
 
 class SocialConversation(models.Model):
-    _name = 'social.conversation'
+    _name = 'social_messenger.conversation'
     _description = 'Social Messenger Conversation'
     _inherit = ['mail.thread']
     _order = 'last_message_date desc'
 
     name = fields.Char(string='Conversation', compute='_compute_name', store=True)
     account_id = fields.Many2one(
-        'social.account', string='Social Account',
+        'social_messenger.account', string='Social Account',
         required=True, ondelete='cascade',
     )
     platform = fields.Selection(related='account_id.platform', store=True)
@@ -30,7 +30,7 @@ class SocialConversation(models.Model):
     sender_profile_pic = fields.Char(string='Profile Picture URL')
 
     social_message_ids = fields.One2many(
-        'social.message', 'conversation_id', string='Messages',
+        'social_messenger.message', 'conversation_id', string='Messages',
     )
     message_count = fields.Integer(
         compute='_compute_message_count', string='Message Count',
@@ -65,7 +65,7 @@ class SocialConversation(models.Model):
 
     def _compute_message_count(self):
         for rec in self:
-            rec.message_count = self.env['social.message'].search_count(
+            rec.message_count = self.env['social_messenger.message'].search_count(
                 [('conversation_id', '=', rec.id)]
             )
 
@@ -78,7 +78,7 @@ class SocialConversation(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('Reply'),
-            'res_model': 'social.message.reply.wizard',
+            'res_model': 'social_messenger.message.reply.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {
@@ -114,7 +114,7 @@ class SocialConversation(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('Messages'),
-            'res_model': 'social.message',
+            'res_model': 'social_messenger.message',
             'view_mode': 'list,form',
             'domain': [('conversation_id', '=', self.id)],
         }
@@ -130,7 +130,7 @@ class SocialConversation(models.Model):
             'attachment_url': attachment_url or '',
             'message_date': fields.Datetime.now(),
         }
-        msg = self.env['social.message'].sudo().create(vals)
+        msg = self.env['social_messenger.message'].sudo().create(vals)
 
         # Update conversation
         self.sudo().write({
@@ -162,7 +162,7 @@ class SocialConversation(models.Model):
             'meta_message_id': meta_message_id or '',
             'message_date': fields.Datetime.now(),
         }
-        msg = self.env['social.message'].sudo().create(vals)
+        msg = self.env['social_messenger.message'].sudo().create(vals)
 
         self.sudo().write({
             'last_message_date': fields.Datetime.now(),

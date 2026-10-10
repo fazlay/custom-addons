@@ -14,7 +14,7 @@ class ResPartner(models.Model):
         ('instagram', 'Instagram'),
     ], string='Social Platform')
     social_conversation_ids = fields.One2many(
-        'social.conversation', 'partner_id',
+        'social_messenger.conversation', 'partner_id',
         string='Social Conversations',
     )
     social_conversation_count = fields.Integer(
@@ -24,7 +24,7 @@ class ResPartner(models.Model):
 
     def _compute_social_conversation_count(self):
         for rec in self:
-            rec.social_conversation_count = self.env['social.conversation'].search_count(
+            rec.social_conversation_count = self.env['social_messenger.conversation'].search_count(
                 [('partner_id', '=', rec.id)]
             )
 
@@ -33,7 +33,7 @@ class ResPartner(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Social Conversations',
-            'res_model': 'social.conversation',
+            'res_model': 'social_messenger.conversation',
             'view_mode': 'list,form',
             'domain': [('partner_id', '=', self.id)],
         }

@@ -16,7 +16,7 @@ class SocialMessengerWebhook(http.Controller):
     
     Configure in Meta Developer Console:
         Callback URL:  https://your-odoo-domain/social_messenger/webhook/<account_id>
-        Verify Token:  (the token you set on the social.account record)
+        Verify Token:  (the token you set on the social_messenger.account record)
         Subscriptions: messages, messaging_postbacks
     """
 
@@ -40,7 +40,7 @@ class SocialMessengerWebhook(http.Controller):
             return Response('Missing parameters', status=400)
 
         env = request.env(user=SUPERUSER_ID)
-        account = env['social.account'].browse(account_id).exists()
+        account = env['social_messenger.account'].browse(account_id).exists()
         if not account:
             _logger.warning("Webhook verify: account %s not found", account_id)
             return Response('Account not found', status=404)
@@ -72,7 +72,7 @@ class SocialMessengerWebhook(http.Controller):
             return Response('Invalid payload', status=400)
 
         env = request.env(user=SUPERUSER_ID)
-        account = env['social.account'].browse(account_id).exists()
+        account = env['social_messenger.account'].browse(account_id).exists()
         if not account:
             _logger.warning("Webhook: account %s not found", account_id)
             return Response('Account not found', status=404)
@@ -147,7 +147,7 @@ class SocialMessengerWebhook(http.Controller):
 
     def _get_or_create_conversation(self, env, account, sender_id):
         """Find existing conversation or create a new one."""
-        Conversation = env['social.conversation'].sudo()
+        Conversation = env['social_messenger.conversation'].sudo()
         conv = Conversation.search([
             ('account_id', '=', account.id),
             ('sender_id', '=', sender_id),

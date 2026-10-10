@@ -3,12 +3,12 @@ from odoo import fields, models
 
 
 class SocialMessage(models.Model):
-    _name = 'social.message'
+    _name = 'social_messenger.message'
     _description = 'Social Messenger Message'
     _order = 'message_date desc'
 
     conversation_id = fields.Many2one(
-        'social.conversation', string='Conversation',
+        'social_messenger.conversation', string='Conversation',
         required=True, ondelete='cascade', index=True,
     )
     direction = fields.Selection([

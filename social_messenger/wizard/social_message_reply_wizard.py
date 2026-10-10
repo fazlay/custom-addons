@@ -8,11 +8,11 @@ _logger = logging.getLogger(__name__)
 
 
 class SocialMessageReplyWizard(models.TransientModel):
-    _name = 'social.message.reply.wizard'
+    _name = 'social_messenger.message.reply.wizard'
     _description = 'Reply to Social Conversation'
 
     conversation_id = fields.Many2one(
-        'social.conversation', string='Conversation',
+        'social_messenger.conversation', string='Conversation',
         required=True, ondelete='cascade',
     )
     body = fields.Text(string='Message', required=True)

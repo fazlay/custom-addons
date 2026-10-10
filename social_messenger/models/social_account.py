@@ -12,7 +12,7 @@ META_GRAPH_API_URL = "https://graph.facebook.com/v21.0"
 
 
 class SocialAccount(models.Model):
-    _name = 'social.account'
+    _name = 'social_messenger.account'
     _description = 'Social Media Account (Facebook / Instagram)'
     _inherit = ['mail.thread']
 
@@ -54,7 +54,7 @@ class SocialAccount(models.Model):
     )
 
     conversation_ids = fields.One2many(
-        'social.conversation', 'account_id', string='Conversations',
+        'social_messenger.conversation', 'account_id', string='Conversations',
     )
     conversation_count = fields.Integer(
         compute='_compute_conversation_count', string='Conversation Count',
@@ -76,7 +76,7 @@ class SocialAccount(models.Model):
 
     def _compute_conversation_count(self):
         for rec in self:
-            rec.conversation_count = self.env['social.conversation'].search_count(
+            rec.conversation_count = self.env['social_messenger.conversation'].search_count(
                 [('account_id', '=', rec.id)]
             )
 
@@ -146,7 +146,7 @@ class SocialAccount(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('Conversations'),
-            'res_model': 'social.conversation',
+            'res_model': 'social_messenger.conversation',
             'view_mode': 'list,form',
             'domain': [('account_id', '=', self.id)],
             'context': {'default_account_id': self.id},
