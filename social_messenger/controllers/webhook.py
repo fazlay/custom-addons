@@ -66,6 +66,7 @@ class SocialMessengerWebhook(http.Controller):
         """
         try:
             raw_body = request.httprequest.get_data(as_text=True)
+            _logger.warning(">>> RAW WEBHOOK PAYLOAD RECEIVED: %s", raw_body)
             data = json.loads(raw_body)
         except (json.JSONDecodeError, Exception) as e:
             _logger.error("Invalid webhook payload: %s", e)
