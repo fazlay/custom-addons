@@ -83,6 +83,15 @@ class SocialMessengerWebhook(http.Controller):
 
         # Determine platform from the webhook object type
         obj_type = data.get('object', '')
+        
+        # Handle Meta dashboard "Test" payload
+        if 'sample' in data:
+            _logger.info("Processing Meta Dashboard test payload")
+            sample_value = data['sample'].get('value', {})
+            if sample_value:
+                self._process_messaging_event(env, account, sample_value)
+            return Response('EVENT_RECEIVED', status=200)
+
         # "page" = Messenger, "instagram" = Instagram
         _logger.info(
             "Webhook event received for account %s, object=%s",
