@@ -39,8 +39,8 @@ class SocialMessengerWebhook(http.Controller):
         if not all([mode, token, challenge]):
             return Response('Missing parameters', status=400)
 
-        env = request.env(user=SUPERUSER_ID)
-        account = env['social_messenger.account'].browse(account_id).exists()
+        env = request.env
+        account = env['social_messenger.account'].sudo().browse(account_id).exists()
         if not account:
             _logger.warning("Webhook verify: account %s not found", account_id)
             return Response('Account not found', status=404)
@@ -72,8 +72,8 @@ class SocialMessengerWebhook(http.Controller):
             _logger.error("Invalid webhook payload: %s", e)
             return Response('Invalid payload', status=400)
 
-        env = request.env(user=SUPERUSER_ID)
-        account = env['social_messenger.account'].browse(account_id).exists()
+        env = request.env
+        account = env['social_messenger.account'].sudo().browse(account_id).exists()
         if not account:
             _logger.warning("Webhook: account %s not found", account_id)
             return Response('Account not found', status=404)
